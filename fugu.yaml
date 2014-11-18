@@ -1,0 +1,29 @@
+---
+
+beacon: &cfg
+    image: mycloud-beacon
+    name: beacon
+    tty: true
+    detach: true
+    volume:
+        - /var/run/docker.sock:/var/run/docker.sock
+    env:
+        - BEACON_DOCKER_URI='unix:///var/run/docker.sock'
+        - BEACON_ETCD_URI=http://$(hostname -i | tr -d ' '):4001
+        - BEACON_ETCD_PREFIX=beacon/services
+        - BEACON_SERVICE_TTL=5
+        - BEACON_SERVICE_HEARBEAT=5
+        - BEACON_SERVICE_HOSTNAME=$(hostname -i | tr -d ' ')
+        - BEACON_LOG_LEVEL=debug
+        - BEACON_LOG_CONSOLE=true
+        - BEACON_LOG_SYSLOG=false
+
+beacon-shell:
+    <<: *cfg
+    name: ''
+    rm: true
+    interactive: true
+    detach: false
+    command: bash
+
+...
